@@ -1,5 +1,6 @@
 package com.sdx.notes.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class User {
     @Column(name = "LAST_NAME")
     private String lastName;
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Note> notes = new ArrayList<>();
 
     @Override

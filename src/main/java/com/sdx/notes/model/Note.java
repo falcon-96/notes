@@ -1,5 +1,6 @@
 package com.sdx.notes.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -10,15 +11,16 @@ import java.time.LocalDateTime;
 @Entity
 public class Note {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
     @Column(name = "TITLE")
     String title;
+    @CreationTimestamp
+    @Column(name = "CREATED_TIMESTAMP", updatable = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    LocalDateTime createdTimestamp;
     @Column(name = "CONTENT")
     String content;
-    @Column(name = "CREATED_TIMESTAMP")
-    @CreationTimestamp
-    LocalDateTime createdTimestamp;
     @Column(name = "LAST_MODIFIED_TIMESTAMP")
     @UpdateTimestamp
     LocalDateTime lastModifiedTimestamp;

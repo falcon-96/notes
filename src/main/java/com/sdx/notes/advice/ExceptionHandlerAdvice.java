@@ -15,6 +15,6 @@ public class ExceptionHandlerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorDetails> entityNotFoundHandling(Exception exception) {
         return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(),
-                exception.getMessage()), HttpStatus.NOT_FOUND);
+                "RESOURCE NOT FOUND"), HttpStatus.NOT_FOUND);
     }
 }
