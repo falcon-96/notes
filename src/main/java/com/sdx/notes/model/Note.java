@@ -1,5 +1,6 @@
 package com.sdx.notes.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,38 +27,14 @@ public class Note {
     LocalDateTime lastModifiedTimestamp;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne
+    @JsonIgnore
     private User user;
 
-    @Override
-    public String toString() {
-        return "Note{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", createdTimestamp=" + createdTimestamp +
-                ", lastModifiedTimestamp=" + lastModifiedTimestamp +
-                ", user=" + user +
-                '}';
-    }
-
-    public Note() {
-
-    }
-
-    public Note(long id, String title, String content, LocalDateTime createdTimestamp, LocalDateTime lastModifiedTimestamp, User user) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.createdTimestamp = createdTimestamp;
-        this.lastModifiedTimestamp = lastModifiedTimestamp;
-        this.user = user;
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -69,20 +46,20 @@ public class Note {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public LocalDateTime getCreatedTimestamp() {
         return createdTimestamp;
     }
 
     public void setCreatedTimestamp(LocalDateTime createdTimestamp) {
         this.createdTimestamp = createdTimestamp;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public LocalDateTime getLastModifiedTimestamp() {
