@@ -16,27 +16,27 @@ public class NotesController {
     }
 
     @PostMapping
-    public ResponseEntity<Note> createNote(@RequestBody Note note) {
+    public ResponseEntity<Note> createNote(@RequestHeader(name = "x-user-id") Long userId, @RequestBody Note note) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(notesService.createNote(note));
+                .body(notesService.createNote(userId, note));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Note> getById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Note> getById(@RequestHeader(name = "x-user-id") Long userId, @PathVariable(name = "id") Long noteId) {
         return ResponseEntity
-                .ok(notesService.getNote(id));
+                .ok(notesService.getNote(userId, noteId));
     }
 
     @PutMapping
-    public ResponseEntity<Note> updateNote(@RequestBody Note note) {
+    public ResponseEntity<Note> updateNote(@RequestHeader(name = "x-user-id") Long userId, @RequestBody Note note) {
         return ResponseEntity
-                .ok(notesService.updateNote(note));
+                .ok(notesService.updateNote(userId, note));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable(name = "id") Long id) {
-        notesService.deleteNote(id);
+    public ResponseEntity<Void> deleteById(@RequestHeader(name = "x-user-id") Long userId, @PathVariable(name = "id") Long noteId) {
+        notesService.deleteNote(userId, noteId);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
