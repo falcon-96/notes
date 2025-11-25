@@ -25,18 +25,18 @@ public class NotesController {
     @GetMapping("/{id}")
     public ResponseEntity<Note> getById(@RequestHeader(name = "x-user-id") Long userId, @PathVariable(name = "id") Long noteId) {
         return ResponseEntity
-                .ok(notesService.getNote(noteId));
+                .ok(notesService.getNote(userId, noteId));
     }
 
     @PutMapping
     public ResponseEntity<Note> updateNote(@RequestHeader(name = "x-user-id") Long userId, @RequestBody Note note) {
         return ResponseEntity
-                .ok(notesService.updateNote(note));
+                .ok(notesService.updateNote(userId, note));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@RequestHeader(name = "x-user-id") Long userId, @PathVariable(name = "id") Long noteId) {
-        notesService.deleteNote(noteId);
+        notesService.deleteNote(userId, noteId);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

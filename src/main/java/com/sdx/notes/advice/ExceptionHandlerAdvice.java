@@ -1,5 +1,6 @@
 package com.sdx.notes.advice;
 
+import com.sdx.notes.exception.AccessDeniedException;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,16 @@ public class ExceptionHandlerAdvice {
     public ResponseEntity<ErrorDetails> entityNotFoundHandling(Exception exception) {
         log.error(exception.getMessage());
         return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(),
-                exception.getLocalizedMessage()), HttpStatus.NOT_FOUND);
+                exception.getLocalizedMessage()),
+                HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<ErrorDetails> accessDeniedException(Exception exception) {
+        log.error(exception.getMessage());
+        return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(),
+                exception.getLocalizedMessage()),
+                HttpStatus.UNAUTHORIZED);
     }
 }

@@ -36,13 +36,15 @@ class NotesAPIIntegrationTest {
     NotesRepository notesRepository;
 
     public static final String BASE_PATH = "/note";
-    private Long testId;
+    private Long authorizedUserid;
+    private Long unauthorizedUserId;
 
     @BeforeAll
     void addUser() {
         User user = new User();
         user.setFirstName("Test");
-        testId = userRepository.save(user).getId();
+        authorizedUserid = userRepository.save(user).getId();
+        unauthorizedUserId = authorizedUserid + 100;
     }
 
     @Test
@@ -52,7 +54,7 @@ class NotesAPIIntegrationTest {
 
         mvc.perform(post(BASE_PATH).accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("x-user-id", 1)
+                        .header("x-user-id", authorizedUserid)
                         .content(note))
                 .andExpect(status().isCreated());
     }
@@ -61,10 +63,19 @@ class NotesAPIIntegrationTest {
     void validId_getApiCalled_getsValidData() throws Exception {
         Note newNote = postNewNote();
         mvc.perform(get(BASE_PATH + "/{id}", newNote.getId())
-                        .header("x-user-id", testId))
+                        .header("x-user-id", authorizedUserid))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", Matchers.is(newNote.getTitle())));
     }
+
+    @Test
+    void unauthorizedUserId_getApiCalled_throwsException() throws Exception {
+        Note newNote = postNewNote();
+        mvc.perform(get(BASE_PATH + "/{id}", newNote.getId())
+                        .header("x-user-id", unauthorizedUserId))
+                .andExpect(status().isUnauthorized());
+    }
+
 
     @Test
     void modifiedNote_updateApiCalled_existingVersionGetsUpdated() throws Exception {
@@ -72,7 +83,7 @@ class NotesAPIIntegrationTest {
         String modifiedNote = """
                 {"id": "%d", "title" : "%s", "content": "%s"}""".formatted(newNote.getId(), newNote.getTitle(), newNote.getContent());
         mvc.perform(put(BASE_PATH).accept(MediaType.APPLICATION_JSON)
-                        .header("x-user-id", testId)
+                        .header("x-user-id", authorizedUserid)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(modifiedNote))
                 .andExpect(status().isOk())
@@ -83,7 +94,7 @@ class NotesAPIIntegrationTest {
     void validId_deleteApiCalled_isDeletedSuccessfully() throws Exception {
         Note newNote = postNewNote();
         mvc.perform(delete(BASE_PATH + "/{id}", newNote.getId())
-                        .header("x-user-id", testId))
+                        .header("x-user-id", authorizedUserid))
                 .andExpect(status().isNoContent());
     }
 
@@ -91,7 +102,7 @@ class NotesAPIIntegrationTest {
     void invalidId_deleteApiCalled_exceptionThrown() throws Exception {
         notesRepository.deleteAll();
         mvc.perform(delete(BASE_PATH + "/{id}", "1")
-                        .header("x-user-id", testId))
+                        .header("x-user-id", authorizedUserid))
                 .andExpect(status().isNotFound());
     }
 
@@ -100,7 +111,7 @@ class NotesAPIIntegrationTest {
                 {"title" : "New Test Note", "content": "Some blank content"}""";
 
         var response = mvc.perform(post(BASE_PATH).accept(MediaType.APPLICATION_JSON)
-                        .header("x-user-id", testId)
+                        .header("x-user-id", authorizedUserid)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(note))
                 .andDo(print())

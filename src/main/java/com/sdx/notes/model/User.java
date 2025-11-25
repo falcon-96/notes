@@ -20,26 +20,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Note> notes = new ArrayList<>();
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", middleName='" + middleName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", notes=" + notes +
-                '}';
-    }
-
     public User() {
-    }
-
-    public User(long id, String firstName, String middleName, String lastName, List<Note> notes) {
-        this.id = id;
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.lastName = lastName;
-        this.notes = notes;
+        // Used in tests
     }
 
     public long getId() {

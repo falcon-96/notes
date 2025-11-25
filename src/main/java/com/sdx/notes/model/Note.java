@@ -50,10 +50,6 @@ public class Note {
         return createdTimestamp;
     }
 
-    public void setCreatedTimestamp(LocalDateTime createdTimestamp) {
-        this.createdTimestamp = createdTimestamp;
-    }
-
     public String getContent() {
         return content;
     }
@@ -64,10 +60,6 @@ public class Note {
 
     public LocalDateTime getLastModifiedTimestamp() {
         return lastModifiedTimestamp;
-    }
-
-    public void setLastModifiedTimestamp(LocalDateTime lastModifiedTimestamp) {
-        this.lastModifiedTimestamp = lastModifiedTimestamp;
     }
 
     public User getUser() {
